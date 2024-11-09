@@ -22,7 +22,7 @@ def all_func_exec():
         time_slot = eventpro.check_empty_input("Enter a Time Slot: ").capitalize()
         eventpro.filter_events(time_slot)
     elif choice_selection == 'Reschedule an Event':
-         phone_number = eventpro.check_empty_input("Enter your phone number: ")
+         phone_number = eventpro.get_valid_phone_number()
          eventpro.reschedule_event(phone_number)
     elif choice_selection =='Cancel a Booking':
         eventpro.cancel_booking()
@@ -35,9 +35,9 @@ def all_func_exec():
 
      
 
-# all_func_exec()
+all_func_exec()
 
 
-eventpro.manager_table()
-eventpro.manager_csv()
+# eventpro.manager_table()
+# eventpro.manager_csv()
 

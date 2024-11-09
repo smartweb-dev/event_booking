@@ -1,5 +1,6 @@
 from datetime import datetime,timedelta
 import calendar
+import re
 
 # Get the current date
 # current_date = datetime.now()
@@ -102,8 +103,10 @@ import calendar
 # Call the function to test it
 # days_left()
 
-days = (1,2,3,4,5,6,7,8,9,10)
-print(len(days))
+
+
+
+
 
 
 

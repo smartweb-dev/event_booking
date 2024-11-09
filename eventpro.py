@@ -3,6 +3,7 @@ from datetime import datetime
 import calendar
 import csv
 import pandas as pd
+import re
 
 
 
@@ -164,6 +165,33 @@ def booking_availability(month,day,hall,time_slot):
 # choose_hall()
 # choose_event_subtype()
 # choose_event_type()
+def validate_nigeria_number(phone_number):
+    
+    phone_number = re.sub(r'\D', '', phone_number)
+    pattern = r'^(?:\+234|234|0)[789][01]\d{8}$'
+
+    
+    if re.match(pattern, phone_number):
+        if phone_number.startswith('+234'):
+            phone_number = '0' + phone_number[4:]
+        elif phone_number.startswith('234'):
+            phone_number = '0' + phone_number[3:]
+        return phone_number
+    else:
+        return None
+
+
+def get_valid_phone_number():
+    while True:
+        phone_number = check_empty_input("Please enter your phone number (+234, 234, or 0 prefix): ")
+        
+        valid_number = validate_nigeria_number(phone_number)
+        
+        if valid_number:
+            return valid_number
+        else:
+            print("Invalid number. Please try again.")
+
 def make_bookings():
     eventName = check_empty_input("What is the Event name? ").capitalize()
     eventType = choose_event_type()
@@ -180,7 +208,7 @@ def make_bookings():
              break      
 
     user_name = check_empty_input("Enter a username: ")
-    user_phone = check_empty_input("Enter your phone number in this format 090/081/070 etc: ")
+    user_phone = get_valid_phone_number()
     payment_question = check_empty_input("would you like to make payment now. Answer with Yes/No: ").capitalize()
     if payment_question == "Yes":
         paymentStatus = "Confirmed"
@@ -257,7 +285,7 @@ def reschedule_event(phone_number):
 
 
 def cancel_booking():
-    user_phone = check_empty_input("Enter your phone number ")
+    user_phone = get_valid_phone_number()
     conn = sqlite3.connect("events.db")
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM quarter_events WHERE Userphone=?",(user_phone,))
@@ -343,7 +371,7 @@ def manager_table():
 def complete_booking():
     conn = sqlite3.connect("events.db")
     cursor = conn.cursor()
-    user_phone = check_empty_input("Enter your Phone number: ")
+    user_phone = get_valid_phone_number()
     cursor.execute("SELECT * FROM quarter_events WHERE Userphone = ?",(user_phone,))
     row = cursor.fetchone()
     if row:
